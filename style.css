@@ -1,0 +1,118 @@
+/* ============================================================
+   KUSTOM STYLESHEET: TANAMAN CURHAT (CANVA GREEN THEME)
+   Warna Utama Canva: #74a82b
+   ============================================================ */
+
+/* 1. Pengaturan Font & Background Default */
+body {
+    background-color: #ffffff;
+    color: #1e293b;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 2. Style & Transisi Gambar Pemadam (Mencegah Gambar Melompat/Shift Saat Dipilih) */
+#imgPemadam {
+    object-fit: contain;
+    transition: filter 0.3s ease, opacity 0.2s ease;
+}
+
+/* Efek bercahaya halus saat pemadam sedang menyemprot air */
+.spraying-active {
+    filter: drop-shadow(0 0 12px rgba(116, 168, 43, 0.4));
+}
+
+/* 3. Style & Efek Interaktif Emoji Suasana Hati */
+.emoji-icon {
+    display: inline-block;
+    filter: grayscale(85%);
+    opacity: 0.35;
+    transform: scale(0.9);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+    user-select: none;
+}
+
+/* Emoji Aktif (Menyala & Membesar) */
+.emoji-active {
+    filter: grayscale(0%);
+    opacity: 1 !important;
+    transform: scale(1.35) !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+/* 4. Kustom Scrollbar untuk Linimasa Curhatan */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #74a82b;
+    border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #5d8822;
+}
+
+/* Firefox scrollbar support */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #74a82b #f1f5f9;
+}
+
+/* 5. Transisi & Efek Hover Tombol */
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+/* Animasi Bouncing Lembut untuk Tombol Play Siram */
+#btnSiramPlay:hover button {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 25px -5px rgba(116, 168, 43, 0.5);
+}
+
+#btnSiramPlay:active button {
+    transform: scale(0.92);
+}
+
+/* Custom CSS untuk Status Badge & Error Banner */
+
+.emoji-icon {
+    display: inline-block;
+    filter: grayscale(85%);
+    opacity: 0.35;
+    transform: scale(0.9);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.emoji-active {
+    filter: grayscale(0%);
+    opacity: 1 !important;
+    transform: scale(1.35) !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #74a82b;
+    border-radius: 8px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanaman Curhat - Dashboard</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white min-h-screen font-sans flex flex-col items-center justify-center p-4 md:p-8">
+
+    <!-- BANNER PERINGATAN KONEKSI GAGAL (Hidden secara bawaan) -->
+    <div id="errorBanner" class="hidden w-full max-w-6xl mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-2xl flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-2">
+            <span class="text-xl">⚠️</span>
+            <span id="errorMessage" class="font-medium">Gagal terhubung ke Supabase. Memeriksa ulang koneksi...</span>
+        </div>
+        <button onclick="loadLatestData()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-1.5 px-3 rounded-xl transition">
+            Coba Lagi
+        </button>
+    </div>
+
+    <!-- MAIN CONTAINER (DESAIN 2 KOLOM) -->
+    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- KOLOM KIRI: VISUAL ILUSTRASI (TANAMAN, PEMADAM, TOMBOL SIRAM) -->
+        <section class="lg:col-span-7 flex flex-col items-center justify-between min-h-[500px] relative">
+            
+            <div class="w-full flex items-end justify-between relative my-auto">
+                <!-- GAMBAR TANAMAN -->
+                <div class="w-2/5 max-w-[240px] z-10">
+                    <img src="assets/tanaman.png" id="imgTanaman" alt="Tanaman Pot" class="w-full h-auto drop-shadow-md transition-transform duration-300">
+                </div>
+
+                <!-- GAMBAR PEMADAM -->
+                <div class="w-3/5 max-w-[420px] relative">
+                    <img src="assets/pemadam_diam.png" id="imgPemadam" alt="Pemadam Kebakaran" class="w-full h-auto transition-all duration-300">
+                </div>
+            </div>
+
+            <!-- TOMBOL UTAMA: SIRAM (PLAY BUTTON HIJAU) -->
+            <div class="mt-6 flex flex-col items-center cursor-pointer group" id="btnSiramPlay">
+                <button id="circlePlayBtn" class="w-20 h-20 bg-[#74a82b] hover:bg-[#639322] active:scale-90 transition-all rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                    <svg class="w-10 h-10 text-white fill-current ml-1" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <span class="mt-2 text-xl font-black text-[#74a82b] tracking-wider group-hover:text-[#639322]">SIRAM</span>
+            </div>
+
+        </section>
+
+        <!-- KOLOM KANAN: PANEL KONTROL HIJAU -->
+        <section class="lg:col-span-5">
+            <div class="bg-[#74a82b] p-6 rounded-[35px] shadow-2xl space-y-5 text-slate-900 border-4 border-[#659622]">
+                
+                <!-- INDIKATOR STATUS KONEKSI (DI ATAS CARD) -->
+                <div class="flex justify-between items-center text-white px-2">
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-90">Status Sistem</span>
+                    <span id="statusBadge" class="bg-emerald-800/60 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-white/20">
+                        <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span> Terhubung
+                    </span>
+                </div>
+
+                <!-- ATAS: CARD UTAMA WHITE -->
+                <div class="bg-white rounded-[28px] p-6 shadow-md space-y-4">
+                    
+                    <!-- EMOJI STATUS SUASANA HATI -->
+                    <div class="flex justify-center items-center gap-4 text-4xl" id="emojiGroup">
+                        <span id="emojiHappy" class="emoji-icon opacity-30 transition-all scale-90">😊</span>
+                        <span id="emojiSad" class="emoji-icon opacity-30 transition-all scale-90">🙁</span>
+                        <span id="emojiAngry" class="emoji-icon opacity-30 transition-all scale-90">😡</span>
+                    </div>
+
+                    <!-- BOX TEKS SUASANA HATI -->
+                    <div class="bg-[#74a82b] text-white text-center py-3 px-4 rounded-2xl shadow-sm">
+                        <h2 class="text-xl font-bold tracking-wide" id="txtSuasanaHati">Memuat...</h2>
+                    </div>
+
+                    <!-- DAFTAR SENSOR -->
+                    <div class="space-y-2 text-lg font-bold text-slate-800 px-2 py-1">
+                        <div class="flex justify-between items-center">
+                            <span>Kelembapan:</span>
+                            <span id="valKelembapan" class="text-[#74a82b]">--%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Sensor Cahaya:</span>
+                            <span id="valCahaya" class="text-[#74a82b]">-- Lux</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Debit Air:</span>
+                            <span id="valDebitAir" class="text-[#74a82b]">--%</span>
+                        </div>
+                    </div>
+
+                    <!-- TOMBOL SIRAM?? -->
+                    <div class="pt-2">
+                        <button id="btnSiramOval" class="w-full bg-[#74a82b] hover:bg-[#639322] active:scale-95 transition-all text-white font-bold py-3 text-xl rounded-2xl shadow-md">
+                            Siram??
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- BAWAH: CARD LINIMASA CURHATAN -->
+                <div class="bg-white rounded-[28px] p-5 shadow-md">
+                    <h3 class="text-xl font-bold text-center text-slate-800 mb-3 border-b border-slate-100 pb-2">
+                        Linimasa Curhatan
+                    </h3>
+                    
+                    <div class="max-h-[180px] overflow-y-auto space-y-2 pr-1 custom-scrollbar" id="listCurhatan">
+                        <div class="text-center text-slate-400 py-4 text-sm italic">
+                            Memuat curhatan tanaman...
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
